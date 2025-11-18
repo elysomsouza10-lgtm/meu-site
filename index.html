@@ -1,17 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>sky tv</title>
+    <meta charset="UTF-8">
+    <title>Loja virtual</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #111;
+            color: white;
+        }
+
+        header {
+            background: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+
+        header h1 {
+            color: #ff4fa3;
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav a:hover {
+            color: #ff4fa3;
+            transition: 0.3s;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform .3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        button {
+            background: #ff4fa3;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #ff2b8b;
+        }
+
+        /* BOTÃO VER CARRINHO */
+        #btnCarrinho {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff4fa3;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* CARRINHO FECHADO */
+        #carrinho {
+            background: #000;
+            padding: 20px;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            border-radius: 10px;
+            width: 250px;
+            display: none; /* Começa escondido */
+            border: 2px solid #ff4fa3;
+        }
+
+        #carrinho h3 {
+            margin-top: 0;
+            color: #ff4fa3;
+        }
+
+        /* WHATSAPP */
+        #zap {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #25D366;
+            padding: 15px 20px;
+            border-radius: 50px;
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>meu primeiro site</h1>
-        <h2>agora eu sei atualizar pagina no vscode sem precisar fazer manualmente</h2>
-        <input type="email" placeholder="Digite seu email aqui:">
-        <br>
-        <a href="https:\\.www.google.com">ir para o google</a>
-        
-    
-    
-</body>
 
+    <!-- MENU -->
+    <header>
+        <h1>Loja virtual</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#produtos">Produtos</a>
+            <a href="#contato">Contato</a>
+        </nav>
+    </header>
+
+    <div class="container" id="home">
+        <h2>Bem-vinda à Loja virtual</h2>
+        <p>Moda feminina moderna com estilo único.</p>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="container" id="produtos">
+        <h2>Catálogo de Produtos</h2>
+
+        <div class="produtos">
+
+            <!-- Produto 1 -->
+            <div class="card">
+                <img src="https://via.placeholder.com/250x300/ff4fa3/ffffff?text=Vestido+Rosa" alt="">
+                <h3>Vestido Rosa</h3>
+                <p>R$ 89,90</p>
+                <button onclick="addCarrinho('Vestido Rosa', 89.90)">Adicionar</button>
+            </div>
+
+            <!-- Produto 2 -->
+            <div class="card">
+                <img src="https://via.placeholder.com/250x300/000000/ffffff?text=Blusa+Preta" alt="">
+                <h3>Blusa Preta</h3>
+                <p>R$ 49,90</p>
+                <button onclick="addCarrinho('Blusa Preta', 49.90)">Adicionar</button>
+            </div>
+
+            <!-- Produto 3 -->
+            <div class="card">
+                <img src="https://via.placeholder.com/250x300/333333/ffffff?text=Calça+Jeans" alt="">
+                <h3>Calça Jeans</h3>
+                <p>R$ 119,90</p>
+                <button onclick="addCarrinho('Calça Jeans', 119.90)">Adicionar</button>
+            </div>
+
+            <!-- Produto 4 -->
+            <div class="card">
+                <img src="https://via.placeholder.com/250x300/ff4fa3/ffffff?text=Short+Pink" alt="">
+                <h3>Short Pink</h3>
+                <p>R$ 59,90</p>
+                <button onclick="addCarrinho('Short Pink', 59.90)">Adicionar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BOTÃO VER CARRINHO -->
+    <button id="btnCarrinho" onclick="toggleCarrinho()">🛒 Ver Carrinho</button>
+
+    <!-- CARRINHO -->
+    <div id="carrinho">
+        <h3>Carrinho</h3>
+        <div id="itens"></div>
+        <p><b>Total: R$ <span id="total">0.00</span></b></p>
+    </div>
+
+    <!-- WHATSAPP -->
+    <a id="zap" href="https://wa.me/55DDDNUMERO?text=Olá!%20Quero%20fazer%20um%20pedido." target="_blank">
+        WhatsApp
+    </a>
+
+    <script>
+        let total = 0;
+        const carrinho = document.getElementById('carrinho');
+
+        function addCarrinho(produto, preco) {
+            const lista = document.getElementById('itens');
+            const item = document.createElement('p');
+
+            item.innerText = produto + " - R$ " + preco.toFixed(2);
+            lista.appendChild(item);
+
+            total += preco;
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        function toggleCarrinho() {
+            if (carrinho.style.display === "none") {
+                carrinho.style.display = "block";
+            } else {
+                carrinho.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
 </html>
